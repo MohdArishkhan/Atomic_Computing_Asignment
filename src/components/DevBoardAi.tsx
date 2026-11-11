@@ -71,8 +71,8 @@ export const DevBoardAi = () => {
     if (!selected) return;
     if (window.confirm('Replace the current board with this template?')) {
       applyPreset(selected);
+      setSelectedPreset(selected);
     }
-    setSelectedPreset('');
   };
   const handleGenerateSummary = async () => {
     setIsSummaryPanelVisible(true);
@@ -89,7 +89,7 @@ export const DevBoardAi = () => {
     }
   };
   return (
-    <div className='min-h-screen w-full overflow-x-auto bg-slate-50'>
+    <div className='min-h-screen w-full overflow-x-hidden bg-slate-50'>
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
@@ -211,39 +211,42 @@ export const DevBoardAi = () => {
             )}
           </div>
         </div>
-        <main className='mx-auto flex max-w-[1800px] gap-4 px-3 py-4 sm:px-6 sm:py-6 lg:px-10'>
-          <div className='flex min-h-[calc(100vh-110px)] gap-4'>
-            <SortableContext items={columnsId}>
-              {columns.map((column: Column, index) => (
-                <ColumnContainer
-                  key={column.id}
-                  column={column}
-                  position={index}
-                  deleteColumn={(id) =>
-                    confirmDelete('Delete this column and all its tasks?', () =>
-                      deleteColumn(id)
-                    )
-                  }
-                  updateColumn={updateColumn}
-                  createTask={createTask}
-                  deleteTask={handleDeleteTask}
-                  updateTask={updateTask}
-                  tasks={                  visibleTasks.filter(
-                    (task: Task) => task.columnId === column.id
-                  )}
-                />
-              ))}
-            </SortableContext>
+        <main className='mx-auto w-full max-w-[1800px] px-3 py-4 sm:px-6 sm:py-6 lg:px-10'>
+          <div className='board-scroll w-full overflow-x-auto overflow-y-hidden pb-3'>
+            <div className='flex min-h-[calc(100vh-110px)] w-max gap-4'>
+              <SortableContext items={columnsId}>
+                {columns.map((column: Column, index) => (
+                  <ColumnContainer
+                    key={column.id}
+                    column={column}
+                    position={index}
+                    deleteColumn={(id) =>
+                      confirmDelete(
+                        'Delete this column and all its tasks?',
+                        () => deleteColumn(id)
+                      )
+                    }
+                    updateColumn={updateColumn}
+                    createTask={createTask}
+                    deleteTask={handleDeleteTask}
+                    updateTask={updateTask}
+                    tasks={visibleTasks.filter(
+                      (task: Task) => task.columnId === column.id
+                    )}
+                  />
+                ))}
+              </SortableContext>
+              <button
+                onClick={createColumn}
+                className='flex h-[500px] w-[min(300px,calc(100vw-1.5rem))] min-w-[min(300px,calc(100vw-1.5rem))] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm font-semibold text-slate-500 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
+              >
+                <span className='rounded-full border border-slate-200 bg-slate-50 p-2'>
+                  <PlusIcon />
+                </span>
+                Add a column
+              </button>
+            </div>
           </div>
-          <button
-            onClick={createColumn}
-            className='flex h-[500px] w-[min(300px,calc(100vw-1.5rem))] min-w-[min(300px,calc(100vw-1.5rem))] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm font-semibold text-slate-500 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
-          >
-            <span className='rounded-full border border-slate-200 bg-slate-50 p-2'>
-              <PlusIcon />
-            </span>
-            Add a column
-          </button>
         </main>
         {showUndo && hasUndo && (
           <div className='fixed bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 rounded-lg bg-slate-900 px-4 py-3 text-sm text-white shadow-xl'>
