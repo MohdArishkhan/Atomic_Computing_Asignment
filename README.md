@@ -1,125 +1,103 @@
-# DevBoardAi 📝
+# DevBoardAi
 
-![DevBoardAi Preview](./devboard-ai-preview.png)
+DevBoardAi is a lightweight project management board for organizing work visually. It follows a familiar Trello-style workflow: create lists, add cards, move work between stages, and keep the board saved automatically.
 
-## 🌐 Live Demo
+![DevBoardAi board preview](./devboard-ai-preview.png)
 
-Deploy this project to Vercel using the instructions below, then replace this
-placeholder with the generated deployment URL:
+## What it includes
 
-`https://your-devboard-ai.vercel.app`
+- Drag and drop columns and tasks
+- Persistent board data with Zustand and browser storage
+- Ready-to-use workflows for:
+  - Software development
+  - Bug tracking
+  - Content planning
+  - Personal planning
+  - Custom boards
+- Editable column names and task content
+- Task priorities and due dates
+- Task search and priority filtering
+- Delete confirmations with undo support
+- AI-generated progress summaries
+- Responsive light theme for desktop and smaller screens
 
-Welcome to the **DevBoardAi** project! This is a modern, intuitive, and feature-rich developer board built with the following awesome technologies:
+## Built with
 
-- ⚡ **Vite** for blazing fast project setup and development
-- ⚛️ **React** with **TypeScript** for a robust and scalable frontend
-- 🎨 **Tailwind CSS** for beautiful and customizable UI components
-- 🖱️ **dnd-kit** for smooth and responsive drag-and-drop functionality
-- 🐻 **Zustand** for simple and efficient state management
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Zustand
+- dnd-kit
 
-## 🚀 Getting Started
+## Run it locally
 
-Follow these steps to get the project up and running on your local machine.
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (version 14 or later)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/crist-pereyra/devboard-ai.git
-   cd devboard-ai
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Configure AI summaries (optional, local only)**
-
-   Create a `.Env` file for local serverless development. The API key is read
-   only by the serverless function:
-
-   ```env
-   OPENROUTER_API_KEY=your_api_key_here
-   OPENROUTER_MODEL=openrouter/free
-   APP_URL=http://localhost:5173
-   ```
-
-   Never use a `VITE_` prefix for the key. For Vercel, add these values in
-   Project Settings > Environment Variables. Do not commit `.Env`.
-
-### Running the Development Server
-
-Start the development server with the following command:
+You need Node.js 14 or newer.
 
 ```bash
+git clone <your-repository-url>
+cd DevBoardAI
+npm install
 npm run dev
 ```
 
-Open your browser and navigate to http://localhost:5173 to see DevBoardAi in action!
+Open the local URL shown by Vite, usually `http://localhost:5173`.
 
-## 📂 Project Structure
+## AI summary setup
 
-Here's an overview of the project's structure:
+The AI summary is handled through the serverless endpoint in [`api/summarize.ts`](./api/summarize.ts). The OpenRouter key is read on the server and is not included in the browser bundle.
 
-```php
-devboard-ai/
-├── public/                 # Public assets
-├── api/                    # Serverless AI endpoint
-├── src/                    # Source code
-│   ├── assets/             # Static assets
-│   ├── components/         # React components
-│   ├── hooks/              # Custom hooks
-│   ├── icons/              # Icons
-│   ├── stores/             # Zustand store
-│   ├── App.css             # Styles
-│   ├── App.tsx             # Main App component
-│   ├── index.tsx           # Entry point
-├── .gitignore              # Git ignore file
-├── index.html              # HTML template
-├── package.json            # Project metadata and scripts
-├── tailwind.config.js      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-└── vite.config.ts          # Vite configuration
+For local development, create a file named `.Env` in the project root:
 
+```env
+OPENROUTER_API_KEY=your_openrouter_key
+OPENROUTER_MODEL=openrouter/free
+APP_URL=http://localhost:5173
 ```
 
-## 🛠️ Key Features
+The `.Env` file is ignored by Git. Never commit an API key or use a `VITE_` prefix for the server key.
 
-- **Drag and Drop**: Effortlessly move tasks between columns using dnd-kit.
-- **State Management**: Efficient and minimal state management with Zustand.
-- **Type Safety**: Benefit from TypeScript's type-checking to minimize errors
-- **Workflow Templates**: Start with software, bug tracking, content, personal, or custom workflows.
-- **Task Management**: Set priority and due dates, search tasks, and filter by priority.
-- **Safe Editing**: Delete confirmations and undo support protect board changes.
-- **AI Summary**: Generate a concise progress summary, blockers, and next priority from the board.
+For a deployed app, configure the same variables in the hosting provider's environment settings. The current API endpoint is designed for Vercel-style serverless deployment.
 
-## 🚀 Deployment
+## Useful commands
 
-The app is configured for Vercel:
+```bash
+npm run dev       # Start the development server
+npm run build     # Type-check and create a production build
+npm run preview   # Preview the production build locally
+npm run lint      # Run ESLint
+```
+
+## Project layout
+
+```text
+DevBoardAI/
+├── api/                 # Serverless AI summary endpoint
+├── public/              # Public assets
+├── src/
+│   ├── components/      # Board, column, and task UI
+│   ├── hooks/           # Board actions and drag/drop logic
+│   ├── icons/           # Reusable SVG icons
+│   ├── stores/          # Persistent Zustand store
+│   ├── App.css          # Global styles
+│   └── types.ts         # Shared TypeScript types
+├── index.html
+├── package.json
+└── vite.config.ts
+```
+
+## Deployment
+
+Build the project with:
 
 ```bash
 npm run build
 ```
 
-Set `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `APP_URL` in the deployment
-environment. The frontend calls `/api/summarize`; the OpenRouter key never
-ships to the browser.
+Vercel is the simplest deployment option because it supports both the Vite frontend and the `api/` serverless function. After deployment, add `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `APP_URL` to the project environment variables, then redeploy.
 
-### Responsive review checklist
+Before sharing the project, check the board at both desktop and mobile widths. In particular, verify horizontal board scrolling, task editing, filters, delete/undo actions, and the AI summary panel.
 
-- Desktop: verify the board toolbar, columns, drag-and-drop, and summary panel.
-- Mobile: verify horizontal board scrolling, wrapped toolbar controls, card
-  editing, priority/date controls, and delete/undo actions.
-- Use the preview image above as the visual reference for the main board.
+## License
 
-## 📜 License
-
-This project is licensed under the MIT License.
+This project is available under the MIT License.
