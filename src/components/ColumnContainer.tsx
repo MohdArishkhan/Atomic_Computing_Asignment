@@ -8,15 +8,17 @@ import { TaskCard } from './TaskCard';
 
 interface Props {
   column: Column;
+  position: number;
   deleteColumn: (id: ID) => void;
   updateColumn: (id: ID, title: string) => void;
   createTask: (columnId: ID) => void;
   deleteTask: (id: ID) => void;
-  updateTask: (id: ID, content: string) => void;
+  updateTask: (id: ID, updates: Partial<Task>) => void;
   tasks: Task[];
 }
 export const ColumnContainer = ({
   column,
+  position,
   deleteColumn,
   updateColumn,
   createTask,
@@ -50,7 +52,7 @@ export const ColumnContainer = ({
       <div
         ref={setNodeRef}
         style={style}
-        className='bg-columnBackgroundColor opacity-40 border-2 border-rose-500 w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col'
+        className='flex h-[500px] max-h-[500px] w-[300px] flex-col rounded-xl border-2 border-blue-400 bg-white opacity-40'
       ></div>
     );
   }
@@ -58,23 +60,26 @@ export const ColumnContainer = ({
     <div
       ref={setNodeRef}
       style={style}
-      className='bg-columnBackgroundColor w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col'
+      className='flex h-[500px] max-h-[500px] w-[300px] flex-col rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60'
     >
       <div
         {...attributes}
         {...listeners}
         onClick={() => setEditMode(true)}
-        className='bg-mainBackgroundColor text-base h-[60px] !cursor-grab rounded-md rounded-b-none
-      p-3 font-bold border-4 border-columnBackgroundColor flex items-center justify-between'
+        className='flex h-[68px] !cursor-grab items-center justify-between rounded-t-xl border-b border-slate-200 bg-white px-4 py-3'
       >
-        <div className='flex gap-2'>
-          <div className='flex justify-center items-center bg-columnBackgroundColor px-2.5 py-1 text-sm rounded-full'>
-            {tasks.length}
+        <div className='flex min-w-0 items-center gap-3'>
+          <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-600'>
+            {position + 1}
           </div>
-          {!editMode && column.title}
+          {!editMode && (
+            <span className='truncate text-sm font-semibold text-slate-800'>
+              {column.title}
+            </span>
+          )}
           {editMode && (
             <input
-              className='bg-black focus:border-rose-500 border rounded outline-none px-2'
+              className='w-full rounded border border-blue-400 bg-white px-2 py-1 text-sm text-slate-900 outline-none'
               value={column.title}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
@@ -87,13 +92,22 @@ export const ColumnContainer = ({
           )}
         </div>
         <button
-          onClick={() => deleteColumn(column.id)}
-          className='stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2'
+          onClick={(event) => {
+            event.stopPropagation();
+            deleteColumn(column.id);
+          }}
+          aria-label={`Delete ${column.title} column`}
+          className='rounded p-1 text-slate-400 transition hover:bg-red-50 hover:text-red-600'
         >
           <TrashIcon />
         </button>
       </div>
-      <div className='flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto'>
+      <div className='flex flex-grow flex-col gap-3 overflow-x-hidden overflow-y-auto p-3'>
+        {tasks.length === 0 && (
+          <p className='rounded-lg border border-dashed border-slate-200 px-3 py-8 text-center text-xs text-slate-400'>
+            No tasks yet
+          </p>
+        )}
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
             <TaskCard
@@ -107,7 +121,7 @@ export const ColumnContainer = ({
       </div>
       <button
         onClick={() => createTask(column.id)}
-        className='flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black'
+        className='flex items-center gap-2 border-t border-slate-200 px-4 py-3 text-sm font-medium text-slate-500 transition hover:bg-blue-50 hover:text-blue-600'
       >
         <PlusIcon />
         Add task

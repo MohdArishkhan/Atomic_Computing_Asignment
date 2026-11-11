@@ -1,8 +1,8 @@
 import './App.css';
-import { KanbanBoard } from './components';
+import { DevBoardAi } from './components';
 
 const App = () => {
-  return <KanbanBoard />;
+  return <DevBoardAi />;
 };
 
 export default App;

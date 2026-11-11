@@ -5,11 +5,14 @@
 html,
 body,
 #root {
-  @apply bg-black text-white box-border;
+  @apply min-h-screen bg-slate-50 text-slate-900 box-border;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar:horizontal {
@@ -17,9 +20,21 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-rose-900 rounded-xl;
+  @apply rounded-xl bg-slate-700;
 }
 
 .task > ::-webkit-scrollbar-thumb {
-  @apply bg-sky-500 rounded-xl;
+  @apply rounded-xl bg-slate-500;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white;
 }

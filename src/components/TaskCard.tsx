@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { FocusEvent, useRef, useState } from 'react';
 import { TrashIcon } from '../icons';
-import { ID, Task } from '../types';
+import { ID, Task, TaskPriority } from '../types';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 interface Props {
   task: Task;
   deleteTask: (id: ID) => void;
-  updateTask: (id: ID, content: string) => void;
+  updateTask: (id: ID, updates: Partial<Task>) => void;
 }
 export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const editContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     setNodeRef,
@@ -36,6 +37,11 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
     setIsEditMode((prev) => !prev);
     setIsMouseOver(false);
   };
+  const handleEditorBlur = (event: FocusEvent<HTMLTextAreaElement>) => {
+    const nextTarget = event.relatedTarget as Node | null;
+    if (nextTarget && editContainerRef.current?.contains(nextTarget)) return;
+    setIsEditMode(false);
+  };
   if (isDragging) {
     return (
       <div
@@ -43,7 +49,7 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
         style={style}
         {...attributes}
         {...listeners}
-        className='bg-mainBackgroundColor opacity-30 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-red-500 cursor-grab relative task'
+        className='relative flex min-h-[100px] cursor-grab items-center rounded-lg border-2 border-blue-400 bg-white p-3 text-left opacity-30'
       ></div>
     );
   }
@@ -54,22 +60,45 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
         style={style}
         {...attributes}
         {...listeners}
-        className='bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative'
+        className='relative flex min-h-[150px] cursor-grab items-center rounded-lg border border-blue-300 bg-white p-3 text-left shadow-lg shadow-slate-200/60'
       >
-        <textarea
-          value={task.content}
-          autoFocus
-          placeholder='Task content here'
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && e.shiftKey) toggleEditMode();
-          }}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-          className='h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none'
-        />
-        <p className='absolute right-4 bottom-4 text-white/40 text-xs'>
-          Press Shift+Enter to save
-        </p>
+        <div ref={editContainerRef} className='flex w-full flex-col gap-2'>
+          <textarea
+            value={task.content}
+            autoFocus
+            placeholder='Task content here'
+            onBlur={handleEditorBlur}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.shiftKey) toggleEditMode();
+            }}
+            onChange={(e) => updateTask(task.id, { content: e.target.value })}
+            className='min-h-20 w-full resize-none rounded border-none bg-transparent text-sm leading-6 text-slate-900 focus:outline-none'
+          />
+          <div className='flex flex-wrap gap-2'>
+            <select
+              value={task.priority || 'medium'}
+              onChange={(e) =>
+                updateTask(task.id, {
+                  priority: e.target.value as TaskPriority,
+                })
+              }
+              className='min-w-0 flex-1 rounded border border-slate-200 px-2 py-1 text-xs text-slate-600'
+            >
+              <option value='low'>Low priority</option>
+              <option value='medium'>Medium priority</option>
+              <option value='high'>High priority</option>
+            </select>
+            <input
+              type='date'
+              value={task.dueDate || ''}
+              onChange={(e) =>
+                updateTask(task.id, { dueDate: e.target.value || undefined })
+              }
+              className='min-w-0 flex-1 rounded border border-slate-200 px-2 py-1 text-xs text-slate-600'
+            />
+          </div>
+          <p className='text-xs text-slate-400'>Shift+Enter to save</p>
+        </div>
       </div>
     );
   }
@@ -82,15 +111,35 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
       onClick={toggleEditMode}
       onMouseEnter={() => setIsMouseOver(true)}
       onMouseLeave={() => setIsMouseOver(false)}
-      className='bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative task'
+      className='task relative flex min-h-[100px] cursor-grab items-center rounded-lg border border-slate-200 bg-white p-3 pr-12 text-left shadow-sm transition hover:border-blue-300 hover:shadow-lg hover:shadow-slate-200/70'
     >
-      <p className='my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap'>
-        {task.content}
-      </p>
+      <div className='flex w-full flex-col gap-2'>
+        <p className='whitespace-pre-wrap break-words text-sm leading-6 text-slate-700'>
+          {task.content}
+        </p>
+        <div className='flex items-center gap-2 text-xs'>
+          <span className={`rounded-full px-2 py-0.5 font-medium ${
+            task.priority === 'high'
+              ? 'bg-red-50 text-red-600'
+              : task.priority === 'low'
+                ? 'bg-slate-100 text-slate-500'
+                : 'bg-blue-50 text-blue-600'
+          }`}>
+            {task.priority || 'medium'}
+          </span>
+          {task.dueDate && (
+            <span className='text-slate-400'>Due {task.dueDate}</span>
+          )}
+        </div>
+      </div>
       {isMouseOver && (
         <button
-          onClick={() => deleteTask(task.id)}
-          className='stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100'
+          onClick={(event) => {
+            event.stopPropagation();
+            deleteTask(task.id);
+          }}
+          aria-label='Delete task'
+          className='absolute right-3 top-3 rounded bg-slate-100 p-2 text-slate-500 opacity-100 transition hover:bg-red-50 hover:text-red-600'
         >
           <TrashIcon />
         </button>
