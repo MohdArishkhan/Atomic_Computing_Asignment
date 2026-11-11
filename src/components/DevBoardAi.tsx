@@ -96,14 +96,14 @@ export const DevBoardAi = () => {
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <header className='mx-auto flex max-w-[1800px] flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-6 py-3 lg:px-10'>
+        <header className='mx-auto flex max-w-[1800px] flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-3 py-3 sm:px-6 lg:px-10'>
           <div className='flex items-center gap-2.5'>
             <span className='h-2.5 w-2.5 rounded-full bg-blue-600' />
             <h1 className='text-lg font-semibold tracking-tight text-slate-900'>
               DevBoardAi
             </h1>
           </div>
-          <div className='flex flex-wrap items-center justify-end gap-2'>
+          <div className='flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end'>
             <label className='sr-only' htmlFor='board-preset'>
               Choose a board template
             </label>
@@ -111,7 +111,7 @@ export const DevBoardAi = () => {
               id='board-preset'
               value={selectedPreset}
               onChange={(event) => handlePresetChange(event.target.value)}
-              className='rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm outline-none transition hover:border-blue-300 focus:border-blue-500'
+              className='min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-sm font-medium text-slate-600 shadow-sm outline-none transition hover:border-blue-300 focus:border-blue-500 sm:flex-none sm:px-3'
             >
               <option value=''>Use a template...</option>
               <option value='custom'>Custom board (start fresh)</option>
@@ -125,7 +125,7 @@ export const DevBoardAi = () => {
               type='button'
               onClick={handleGenerateSummary}
               disabled={isSummarizing}
-              className='rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60'
+              className='shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60'
             >
               {isSummarizing ? 'Summarizing...' : 'AI summary'}
             </button>
@@ -139,8 +139,8 @@ export const DevBoardAi = () => {
           </div>
         </header>
         {isSummaryPanelVisible && (summary || summaryError || isSummarizing) && (
-          <section className='mx-auto max-w-[1800px] px-6 pt-5 lg:px-10'>
-            <div className='rounded-xl border border-blue-100 bg-white p-5 shadow-sm'>
+          <section className='mx-auto max-w-[1800px] px-3 pt-4 sm:px-6 lg:px-10'>
+            <div className='rounded-xl border border-blue-100 bg-white p-4 shadow-sm sm:p-5'>
               <div className='mb-2 flex items-center justify-between'>
                 <div>
                   <p className='text-xs font-semibold uppercase tracking-[0.16em] text-blue-600'>
@@ -175,8 +175,8 @@ export const DevBoardAi = () => {
             </div>
           </section>
         )}
-        <div className='mx-auto flex max-w-[1800px] flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 px-6 py-3 lg:px-10'>
-          <label className='min-w-[220px] flex-1 sm:max-w-xs'>
+        <div className='mx-auto flex max-w-[1800px] flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 px-3 py-3 sm:px-6 lg:px-10'>
+          <label className='w-full sm:max-w-xs sm:flex-1'>
             <span className='sr-only'>Search tasks</span>
             <input
               value={search}
@@ -185,11 +185,11 @@ export const DevBoardAi = () => {
               className='w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-500'
             />
           </label>
-          <div className='flex items-center gap-2'>
+          <div className='flex w-full items-center gap-2 sm:w-auto'>
             <select
               value={priorityFilter}
               onChange={(event) => setPriorityFilter(event.target.value as 'all' | TaskPriority)}
-              className='rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm outline-none transition focus:border-blue-500'
+              className='min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm outline-none transition focus:border-blue-500 sm:flex-none'
               aria-label='Filter by priority'
             >
               <option value='all'>All priorities</option>
@@ -211,7 +211,7 @@ export const DevBoardAi = () => {
             )}
           </div>
         </div>
-        <main className='mx-auto flex max-w-[1800px] gap-4 px-6 py-6 lg:px-10'>
+        <main className='mx-auto flex max-w-[1800px] gap-4 px-3 py-4 sm:px-6 sm:py-6 lg:px-10'>
           <div className='flex min-h-[calc(100vh-110px)] gap-4'>
             <SortableContext items={columnsId}>
               {columns.map((column: Column, index) => (
@@ -237,7 +237,7 @@ export const DevBoardAi = () => {
           </div>
           <button
             onClick={createColumn}
-            className='flex h-[500px] w-[300px] min-w-[300px] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm font-semibold text-slate-500 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
+            className='flex h-[500px] w-[min(300px,calc(100vw-1.5rem))] min-w-[min(300px,calc(100vw-1.5rem))] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm font-semibold text-slate-500 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600'
           >
             <span className='rounded-full border border-slate-200 bg-slate-50 p-2'>
               <PlusIcon />

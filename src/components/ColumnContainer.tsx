@@ -52,7 +52,7 @@ export const ColumnContainer = ({
       <div
         ref={setNodeRef}
         style={style}
-        className='flex h-[500px] max-h-[500px] w-[300px] flex-col rounded-xl border-2 border-blue-400 bg-white opacity-40'
+        className='flex h-[500px] max-h-[500px] w-[min(300px,calc(100vw-1.5rem))] min-w-[min(300px,calc(100vw-1.5rem))] flex-col rounded-xl border-2 border-blue-400 bg-white opacity-40'
       ></div>
     );
   }
@@ -60,7 +60,7 @@ export const ColumnContainer = ({
     <div
       ref={setNodeRef}
       style={style}
-      className='flex h-[500px] max-h-[500px] w-[300px] flex-col rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60'
+      className='flex h-[500px] max-h-[500px] w-[min(300px,calc(100vw-1.5rem))] min-w-[min(300px,calc(100vw-1.5rem))] flex-col rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/60'
     >
       <div
         {...attributes}
