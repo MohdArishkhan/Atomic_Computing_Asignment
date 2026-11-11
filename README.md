@@ -21,6 +21,12 @@ DevBoardAi is a lightweight project management board for organizing work visuall
 - AI-generated progress summaries
 - Responsive light theme for desktop and smaller screens
 
+## Live demo
+
+Try the deployed application here:
+
+**[Open DevBoardAi](https://atomic-computing-assignment.vercel.app/)**
+
 ## Built with
 
 - React
@@ -95,6 +101,8 @@ npm run build
 ```
 
 Vercel is the simplest deployment option because it supports both the Vite frontend and the `api/` serverless function. After deployment, add `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `APP_URL` to the project environment variables, then redeploy.
+
+Current deployment: https://atomic-computing-assignment.vercel.app/
 
 Before sharing the project, check the board at both desktop and mobile widths. In particular, verify horizontal board scrolling, task editing, filters, delete/undo actions, and the AI summary panel.
 
