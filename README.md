@@ -1,12 +1,15 @@
-# Kanban Board 📝
+# DevBoardAi 📝
 
-![Kanban Preview](./kanban-preview.png)
+![DevBoardAi Preview](./devboard-ai-preview.png)
 
 ## 🌐 Live Demo
 
-Explore the live demonstration of the project: [kanban-board](https://kanban-board-beta-three.vercel.app/)
+Deploy this project to Vercel using the instructions below, then replace this
+placeholder with the generated deployment URL:
 
-Welcome to the **Kanban Board** project! This is a modern, intuitive, and feature-rich Kanban Board built with the following awesome technologies:
+`https://your-devboard-ai.vercel.app`
+
+Welcome to the **DevBoardAi** project! This is a modern, intuitive, and feature-rich developer board built with the following awesome technologies:
 
 - ⚡ **Vite** for blazing fast project setup and development
 - ⚛️ **React** with **TypeScript** for a robust and scalable frontend
@@ -28,8 +31,8 @@ Follow these steps to get the project up and running on your local machine.
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/crist-pereyra/kanban-board.git
-   cd kanban-board
+   git clone https://github.com/crist-pereyra/devboard-ai.git
+   cd devboard-ai
    ```
 
 2. **Install dependencies**
@@ -37,6 +40,20 @@ Follow these steps to get the project up and running on your local machine.
    ```bash
    npm install
    ```
+
+3. **Configure AI summaries (optional, local only)**
+
+   Create a `.Env` file for local serverless development. The API key is read
+   only by the serverless function:
+
+   ```env
+   OPENROUTER_API_KEY=your_api_key_here
+   OPENROUTER_MODEL=openrouter/free
+   APP_URL=http://localhost:5173
+   ```
+
+   Never use a `VITE_` prefix for the key. For Vercel, add these values in
+   Project Settings > Environment Variables. Do not commit `.Env`.
 
 ### Running the Development Server
 
@@ -46,15 +63,16 @@ Start the development server with the following command:
 npm run dev
 ```
 
-Open your browser and navigate to http://localhost:5173 to see the Kanban Board in action!
+Open your browser and navigate to http://localhost:5173 to see DevBoardAi in action!
 
 ## 📂 Project Structure
 
 Here's an overview of the project's structure:
 
 ```php
-kanban-board/
+devboard-ai/
 ├── public/                 # Public assets
+├── api/                    # Serverless AI endpoint
 ├── src/                    # Source code
 │   ├── assets/             # Static assets
 │   ├── components/         # React components
@@ -78,6 +96,29 @@ kanban-board/
 - **Drag and Drop**: Effortlessly move tasks between columns using dnd-kit.
 - **State Management**: Efficient and minimal state management with Zustand.
 - **Type Safety**: Benefit from TypeScript's type-checking to minimize errors
+- **Workflow Templates**: Start with software, bug tracking, content, personal, or custom workflows.
+- **Task Management**: Set priority and due dates, search tasks, and filter by priority.
+- **Safe Editing**: Delete confirmations and undo support protect board changes.
+- **AI Summary**: Generate a concise progress summary, blockers, and next priority from the board.
+
+## 🚀 Deployment
+
+The app is configured for Vercel:
+
+```bash
+npm run build
+```
+
+Set `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, and `APP_URL` in the deployment
+environment. The frontend calls `/api/summarize`; the OpenRouter key never
+ships to the browser.
+
+### Responsive review checklist
+
+- Desktop: verify the board toolbar, columns, drag-and-drop, and summary panel.
+- Mobile: verify horizontal board scrolling, wrapped toolbar controls, card
+  editing, priority/date controls, and delete/undo actions.
+- Use the preview image above as the visual reference for the main board.
 
 ## 📜 License
 
